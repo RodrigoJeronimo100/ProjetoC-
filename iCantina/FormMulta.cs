@@ -51,14 +51,26 @@ namespace iCantina
             int escmulta = ListBoxMulta.SelectedIndex;
             if (escmulta != -1)
             {
-                using (var db = new ApplicationContext())
+                try
                 {
-                    Multa multaselecionada = (Multa)ListBoxMulta.SelectedItem; // descobrir o que será indicado nas textbox ao selecionar na listBox
-                                                                               // mostra dados da multa                                                                                   
-                    textBoxValor.Text = multaselecionada.Valor.ToString();
-                    dateTimePickerMulta.Text = multaselecionada.NumHoras.ToString();
-
-
+                    using (var db = new ApplicationContext())
+                    {
+                        // Ensure the selected item is of type Multa
+                        if (ListBoxMulta.SelectedItem is Multa multaselecionada)
+                        {
+                            // Show data of the selected multa in the textboxes
+                            textBoxValor.Text = multaselecionada.Valor.ToString();
+                            dateTimePickerMulta.Text = multaselecionada.NumHoras.ToString();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Item selecionado não é uma multa válida.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ocorreu um erro ao selecionar a multa: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
